@@ -71,7 +71,7 @@ figure {
 
 #masthead {
   background-color: #a7031f;
-  flex: 1 1 content;
+  flex: 5 1 content;
   order: 1;
 }
 
@@ -81,12 +81,16 @@ figure {
 
 #main {
   background-color: #faf7f2;
-  flex: 1 1 auto;
+  flex: 4 1 auto;
   order: 2;
-  height: content;
   display: flex;
   flex-direction: row;
-  min-height: 63vh;
+}
+
+@media (min-width: 769px) {
+  #main {
+    min-height: 63vh;
+  }
 }
 
 #main p {

@@ -67,12 +67,13 @@ figure {
   min-height: 640px;
   @include media('>phone') {
     min-height: 100vh;
+//    flex-direction: row;
   }
 }
 
     #masthead {
       background-color: $red;
-      flex: 1 1 content;
+      flex: 5 1 content;
       order: 1;
       h1 {color: $white;}
 
@@ -81,12 +82,14 @@ figure {
 
     #main {
       background-color: $white;
-      flex: 1 1 auto;
+      flex: 4 1 auto;
       order: 2;
-      height: content;
       display: flex;
       flex-direction: row;
-      min-height: 63vh;
+      @include media('>tablet') {
+                      
+        min-height: 63vh;
+      }
       p {
         margin: 0 1rem;
       }
@@ -160,13 +163,13 @@ figure {
             flex: 1 1 8rem;
             flex-direction: column;
             max-width: 320px;
-
           }
         }
 
         #blogs {
           order:4;
           background-color: cornsilk;
+
         }
 
 
