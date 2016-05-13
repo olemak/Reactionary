@@ -1,0 +1,21 @@
+/*
+Theme Name: Reactionary
+Theme URI: https://olemak.no/reactionary
+Author: Ole Martin Kristiansen
+Author URI: https://olemak.no/
+Description: For the benefit of the people our world-leading computer scientists have reseached and developed a revolutionary, ultra-fast and extremely lightweight theme that brings the power of React to the WordPress community.
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: black, blue, white, light, scss, sass, responsive-layout, flex, react, ReactJS
+Text Domain: reactionary
+
+This theme, like WordPress, is licensed under the GPL.
+Rip it apart or use it as-is - entirely up to you!
+
+The SCSS files are located in assets/scss and are compiled to assets/css/style.css
+
+Most of the React stuff  happens in assets/js, where the most important file is /assets/js/reactionary-source.js
+This is an ECMAscript 2015/jsx file which is transpiled to vanilla javaScript in assets/js/reactionary.js - this is the file that is loaded in the browser.
+
+
+*/

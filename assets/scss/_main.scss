@@ -1,0 +1,177 @@
+$red: #a7031f;
+$black: #07030b;
+$white: #faf7f2;
+$blue: #5f6b85;
+
+// BORDERBOX
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+
+
+body {
+  background-color: $white;
+}
+
+*  {
+	transition-duration: 1s;
+	transition-timing-function: ease-in;
+	font-family: 'Maven Pro', sans-serif;
+	font-weight: 400;
+  color: $black;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Anton', sans-serif;
+  padding: 0.5rem 1rem;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: $blue;
+  transition-duration: 0.1s;
+  &:hover {
+    color: $black;
+  }
+}
+
+h4 {
+  padding: 0.2rem 1rem;
+}
+
+ul {
+  list-style: none;
+  padding: 0.2rem;
+}
+
+figure {
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+
+/************* SEXY FLEXY STYLES **************/
+
+#content {
+  display: flex;
+  flex-direction: column;
+  min-height: 640px;
+  @include media('>phone') {
+    min-height: 100vh;
+  }
+}
+
+    #masthead {
+      background-color: $red;
+      flex: 1 1 content;
+      order: 1;
+      h1 {color: $white;}
+
+    }
+
+
+    #main {
+      background-color: $white;
+      flex: 1 1 auto;
+      order: 2;
+      height: content;
+      display: flex;
+      flex-direction: row;
+      min-height: 63vh;
+      p {
+        margin: 0 1rem;
+      }
+    }
+
+    #featuredImage {
+      flex: 1;
+    }
+    #textContent {
+      flex: 1;
+      padding-bottom: 1rem;
+    }
+
+
+
+    #cases, #blogs {
+      background-color: $white;
+      display: flex;
+      flex: 0 0 auto;
+      margin: 0;
+      padding-top: 0;
+          h4, p {
+         //   max-width: 320px;
+          }
+      @include media('>tablet') {
+        position: relative;
+        padding-left: 0;
+        min-height: 14vh;
+        h3 {
+          background-color: $red;
+          color: $white;
+          transform: rotate(90deg);
+          transform-origin: top left;
+       //   top: -32.5%;
+          width: 160px;
+
+          position: absolute;
+          margin: 0 3rem;
+          height: 3rem;
+          text-align: center;
+        }
+        li {
+          flex: 1 1 23%;
+          min-width: 120px;
+          max-width: 640px;
+          margin-left: 3rem;
+          display: block;
+          a {
+            flex: 1 1 auto;
+
+            display: flex;
+            flex-direction: row;
+          }
+          img {
+            height: 160px;
+            width: 320px;
+          }
+          h4 {
+            font-size: 1.6rem;
+          }
+
+        }
+      }
+    }
+
+        #cases {
+          order:3;
+          background-color: $blue;
+          color: $white;
+          @include media('>tablet') {
+            flex: 1 1 8rem;
+            flex-direction: column;
+            max-width: 320px;
+
+          }
+        }
+
+        #blogs {
+          order:4;
+          background-color: cornsilk;
+        }
+
+
+/********* REALLY SPECIFIC TWEAKS ***************/
+
+ul>h3 {
+ text-transform: capitalize;
+}

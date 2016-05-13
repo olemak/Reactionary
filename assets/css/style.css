@@ -1,0 +1,173 @@
+/**************************
+FONTS
+**************************/
+@import url(https://fonts.googleapis.com/css?family=Anton|Maven+Pro);
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  background-color: #faf7f2;
+}
+
+* {
+  transition-duration: 1s;
+  transition-timing-function: ease-in;
+  font-family: 'Maven Pro', sans-serif;
+  font-weight: 400;
+  color: #07030b;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Anton', sans-serif;
+  padding: 0.5rem 1rem;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: #5f6b85;
+  transition-duration: 0.1s;
+}
+
+a:hover {
+  color: #07030b;
+}
+
+h4 {
+  padding: 0.2rem 1rem;
+}
+
+ul {
+  list-style: none;
+  padding: 0.2rem;
+}
+
+figure {
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+/************* SEXY FLEXY STYLES **************/
+#content {
+  display: flex;
+  flex-direction: column;
+  min-height: 640px;
+}
+
+@media (min-width: 321px) {
+  #content {
+    min-height: 100vh;
+  }
+}
+
+#masthead {
+  background-color: #a7031f;
+  flex: 1 1 content;
+  order: 1;
+}
+
+#masthead h1 {
+  color: #faf7f2;
+}
+
+#main {
+  background-color: #faf7f2;
+  flex: 1 1 auto;
+  order: 2;
+  height: content;
+  display: flex;
+  flex-direction: row;
+  min-height: 63vh;
+}
+
+#main p {
+  margin: 0 1rem;
+}
+
+#featuredImage {
+  flex: 1;
+}
+
+#textContent {
+  flex: 1;
+  padding-bottom: 1rem;
+}
+
+#cases, #blogs {
+  background-color: #faf7f2;
+  display: flex;
+  flex: 0 0 auto;
+  margin: 0;
+  padding-top: 0;
+}
+
+@media (min-width: 769px) {
+  #cases, #blogs {
+    position: relative;
+    padding-left: 0;
+    min-height: 14vh;
+  }
+  #cases h3, #blogs h3 {
+    background-color: #a7031f;
+    color: #faf7f2;
+    transform: rotate(90deg);
+    transform-origin: top left;
+    width: 160px;
+    position: absolute;
+    margin: 0 3rem;
+    height: 3rem;
+    text-align: center;
+  }
+  #cases li, #blogs li {
+    flex: 1 1 23%;
+    min-width: 120px;
+    max-width: 640px;
+    margin-left: 3rem;
+    display: block;
+  }
+  #cases li a, #blogs li a {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: row;
+  }
+  #cases li img, #blogs li img {
+    height: 160px;
+    width: 320px;
+  }
+  #cases li h4, #blogs li h4 {
+    font-size: 1.6rem;
+  }
+}
+
+#cases {
+  order: 3;
+  background-color: #5f6b85;
+  color: #faf7f2;
+}
+
+@media (min-width: 769px) {
+  #cases {
+    flex: 1 1 8rem;
+    flex-direction: column;
+    max-width: 320px;
+  }
+}
+
+#blogs {
+  order: 4;
+  background-color: cornsilk;
+}
+
+/********* REALLY SPECIFIC TWEAKS ***************/
+ul > h3 {
+  text-transform: capitalize;
+}
