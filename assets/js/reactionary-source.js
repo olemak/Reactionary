@@ -4,24 +4,11 @@ var App = React.createClass({
   getInitialState: function() {
     return (
       {
-        titles: ['Blogs','Projects'],
-        blogs : [{title: '', excerpt: '', content:'', id: 1 }],
-        cases : [
-          {
-            title: 'Case nummer en',
-            excerpt: 'Forskjellig ingress her også!',
-            content:'Alt er helt ulikt. Innhold case to.',
-            id: 1
-          },
-          {
-            title: 'Case TO',
-            excerpt: 'Ingress andre case!',
-            content:'Innhold tredje case.',
-            id: 2
-          }
-        ],
+        titles: ['Reactionary', 'Blogs', 'Projects'],
+        primary : [{title: '', excerpt: '', content:'', id: 0 }],
+        secondary : [{title: '', excerpt: '', content:'', id: 0 }],
         active: [0],
-        contentScope: 'blogs'
+        contentScope: 'primary'
       });
   },
 
@@ -36,43 +23,52 @@ var App = React.createClass({
 
 
   componentDidMount: function() {
-    $.get(this.props.blogSource, function (result) {
-      if (this.isMounted()) {
-        this.setState({
-          blogs: result
-        });
+    var connection = new XMLHttpRequest();
+    connection.open("GET", 'wp-content/themes/reactionary/assets/content/posts.json', true);
+    connection.send();
+    connection.onreadystatechange = function() {
+      if (connection.readyState==4 && connection.status==200) {
+      var result = JSON.parse(connection.responseText);
+        if (this.isMounted()) {
+          this.setState({
+            menu: result.menu.posts,
+            primary: result.primary.posts,
+            secondary: result.secondary.posts,
+            titles: [result.menu.title, result.primary.title, result.secondary.title],
+          });
+        }
       }
-    }.bind(this));
+    }.bind(this);
+  },
 
-    $.get(this.props.caseSource, function (result) {
+/*
+    $.get('wp-content/themes/reactionary/assets/content/posts.json', function (result) {
       if (this.isMounted()) {
         this.setState({
-          cases: result
-        });
-      }
-    }.bind(this));
-
-    $.get('wp-content/themes/reactionary/assets/content/titles.json', function (result) {
-      if (this.isMounted()) {
-        this.setState({
-          titles: result
+          menu: result.menu.posts,
+          primary: result.primary.posts,
+          secondary: result.secondary.posts,
+          titles: [result.menu.title, result.primary.title, result.secondary.title],
         });
       }
     }.bind(this));
   },
+*/
 
 
   render: function() {
     var active = this.state.active;
     var contentScope = this.state.contentScope;
-    var primaryLocation = this.state.titles[0];
-    var secondaryLocation = this.state.titles[1];
+    var blogname = this.state.titles[0];
+    var primaryLocation = this.state.titles[1];
+    var secondaryLocation = this.state.titles[2];
+
 
     return (
       <div id="content">
-        <MastHead />
-        <SidebarElement location={"cases"} labelTitle={primaryLocation} parent={this} />
-        <SidebarElement location={"blogs"} labelTitle={secondaryLocation} parent={this} />       
+        <MastHead blogname={blogname} />
+        <SidebarElement location="primary" labelTitle={primaryLocation} parent={this} />
+        <SidebarElement location="secondary" labelTitle={secondaryLocation} parent={this} />       
         <MainView article={this.state[contentScope][active]} />
       </div>
     );
@@ -90,7 +86,7 @@ var MainView = React.createClass({
     return(
       <main id="main">
         <div className="featuredImage">
-          {(featured_media ? <FeaturedImage imageID={this.props.article.featured_media} imageSize="largeFull" /> : '')}
+          {(this.props.article.featured_media ? <img src={this.props.article.image_urls.largeWide} imageSize="smallWide" /> : '')}
         </div>
         <div className="textContent">
           <h1 dangerouslySetInnerHTML={this.rawHTML(this.props.article.title)} />
@@ -109,7 +105,7 @@ var MastHead = React.createClass({
   render: function(){
     return(
       <div id="masthead">
-        <h1>olemak</h1>
+        <h1>{this.props.blogname}</h1>
       </div>
     );
   }
@@ -133,11 +129,10 @@ var SidebarElement = React.createClass({
           <ul id={loc}>
           <h3>{this.props.labelTitle}</h3>
           {this.props.parent.state[loc].map(function(singleCase, i) {
-   //         console.log(singleCase.featured_media);
             return (
               <li onClick={this.props.parent.updateMainView.bind(null, i, loc)} key={i}>
                 <a href="#">
-                  {(singleCase.featured_media ? <FeaturedImage imageID={singleCase.featured_media} imageSize="smallWide" /> : '')}
+                  {(singleCase.featured_media ? <img src={singleCase.image_urls.smallWide} imageSize="smallWide" /> : '')}
                   <span className="slinky">
                     <h4 dangerouslySetInnerHTML={this.rawHTML(singleCase.title)} />
                     <h6 dangerouslySetInnerHTML={this.rawHTML(singleCase.excerpt)} />
@@ -147,51 +142,11 @@ var SidebarElement = React.createClass({
             );
           }, this)}
         </ul>
-
     );
   }
 });
-
-var FeaturedImage = React.createClass({
-  getInitialState: function() {
-    return ({
-      smallWide : 'wp-content/themes/reactionary/assets/images/ajax-loader.gif',
-      largeFull : 'wp-content/themes/reactionary/assets/images/ajax-loader.gif'   
-    });
-  },
-
-  imageDataEndpoint: function() {
-    var endpoint = 'wp-json/wp/v2/media/' + this.props.imageID;
-    return(endpoint);
-  },
-
-  componentDidMount: function() {
-    $.get(this.imageDataEndpoint(), function (result) {
-      if (this.isMounted()) {
-        console.log(result);
-        this.setState({
-          'smallWide':  result.media_details.sizes.smallWide.source_url,
-          'largeFull':  result.media_details.sizes.mediumFull.source_url
-        });
-      }
-    }.bind(this));
-  },
-
-  render: function() {
-    return(
-        <img src={this.state[this.props.imageSize]} />
-    );
-  }
-});
-
-var reactionary = <App
-    blogSource='wp-content/themes/reactionary/assets/content/primary.json'
-    caseSource='wp-content/themes/reactionary/assets/content/secondary.json' />;
 
 React.render(
-  reactionary,
+  <App />,
   document.getElementById('body')
 );
-
-
-

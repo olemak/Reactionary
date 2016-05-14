@@ -65,18 +65,34 @@ figure {
 
 @media (min-width: 321px) {
   #content {
-    min-height: 100vh;
+    min-height: 98vh;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 }
 
 #masthead {
   background-color: #a7031f;
-  flex: 5 1 content;
+  flex: 5 0 auto;
   order: 1;
 }
 
 #masthead h1 {
   color: #faf7f2;
+}
+
+@media (min-width: 769px) {
+  #masthead {
+    flex: 1;
+  }
+  #masthead h1 {
+    transform: rotate(90deg);
+    transform-origin: bottom left;
+    font-size: 6rem;
+    position: absolute;
+    padding-bottom: 0;
+    margin-left: -2rem;
+  }
 }
 
 #main {
@@ -85,11 +101,17 @@ figure {
   order: 2;
   display: flex;
   flex-direction: row;
+  padding-bottom: 3rem;
 }
 
 @media (min-width: 769px) {
   #main {
-    min-height: 63vh;
+    flex: 3 0 60vw;
+    min-height: 79vh;
+  }
+  #main p {
+    max-width: 53rem;
+    font-size: 1.4rem;
   }
 }
 
@@ -106,7 +128,7 @@ figure {
   padding-bottom: 1rem;
 }
 
-#cases, #blogs {
+#primary, #secondary {
   background-color: #faf7f2;
   display: flex;
   flex: 0 0 auto;
@@ -115,12 +137,12 @@ figure {
 }
 
 @media (min-width: 769px) {
-  #cases, #blogs {
+  #primary, #secondary {
     position: relative;
     padding-left: 0;
     min-height: 14vh;
   }
-  #cases h3, #blogs h3 {
+  #primary h3, #secondary h3 {
     background-color: #a7031f;
     color: #faf7f2;
     transform: rotate(90deg);
@@ -131,44 +153,51 @@ figure {
     height: 3rem;
     text-align: center;
   }
-  #cases li, #blogs li {
+  #primary li, #secondary li {
     flex: 1 1 23%;
     min-width: 120px;
     max-width: 640px;
     margin-left: 3rem;
     display: block;
   }
-  #cases li a, #blogs li a {
+  #primary li a, #secondary li a {
     flex: 1 1 auto;
     display: flex;
     flex-direction: row;
   }
-  #cases li img, #blogs li img {
+  #primary li img, #secondary li img {
     height: 160px;
     width: 320px;
   }
-  #cases li h4, #blogs li h4 {
+  #primary li h4, #secondary li h4 {
     font-size: 1.6rem;
   }
 }
 
-#cases {
+#primary {
   order: 3;
   background-color: #5f6b85;
   color: #faf7f2;
 }
 
 @media (min-width: 769px) {
-  #cases {
+  #primary {
     flex: 1 1 8rem;
     flex-direction: column;
     max-width: 320px;
   }
 }
 
-#blogs {
+#secondary {
   order: 4;
   background-color: cornsilk;
+}
+
+@media (min-width: 769px) {
+  #secondary {
+    min-height: 16vh;
+    width: 98vw;
+  }
 }
 
 /********* REALLY SPECIFIC TWEAKS ***************/

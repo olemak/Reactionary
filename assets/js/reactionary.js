@@ -5,21 +5,11 @@ var App = React.createClass({
 
   getInitialState: function getInitialState() {
     return {
-      titles: ['Blogs', 'Projects'],
-      blogs: [{ title: '', excerpt: '', content: '', id: 1 }],
-      cases: [{
-        title: 'Case nummer en',
-        excerpt: 'Forskjellig ingress her også!',
-        content: 'Alt er helt ulikt. Innhold case to.',
-        id: 1
-      }, {
-        title: 'Case TO',
-        excerpt: 'Ingress andre case!',
-        content: 'Innhold tredje case.',
-        id: 2
-      }],
+      titles: ['Reactionary', 'Blogs', 'Projects'],
+      primary: [{ title: '', excerpt: '', content: '', id: 0 }],
+      secondary: [{ title: '', excerpt: '', content: '', id: 0 }],
       active: [0],
-      contentScope: 'blogs'
+      contentScope: 'primary'
     };
   },
 
@@ -33,43 +23,51 @@ var App = React.createClass({
   },
 
   componentDidMount: function componentDidMount() {
-    $.get(this.props.blogSource, (function (result) {
-      if (this.isMounted()) {
-        this.setState({
-          blogs: result
-        });
+    var connection = new XMLHttpRequest();
+    connection.open('GET', 'wp-content/themes/reactionary/assets/content/posts.json', true);
+    connection.send();
+    connection.onreadystatechange = (function () {
+      if (connection.readyState == 4 && connection.status == 200) {
+        var result = JSON.parse(connection.responseText);
+        if (this.isMounted()) {
+          this.setState({
+            menu: result.menu.posts,
+            primary: result.primary.posts,
+            secondary: result.secondary.posts,
+            titles: [result.menu.title, result.primary.title, result.secondary.title]
+          });
+        }
       }
-    }).bind(this));
-
-    $.get(this.props.caseSource, (function (result) {
-      if (this.isMounted()) {
-        this.setState({
-          cases: result
-        });
-      }
-    }).bind(this));
-
-    $.get('wp-content/themes/reactionary/assets/content/titles.json', (function (result) {
-      if (this.isMounted()) {
-        this.setState({
-          titles: result
-        });
-      }
-    }).bind(this));
+    }).bind(this);
   },
+
+  /*
+      $.get('wp-content/themes/reactionary/assets/content/posts.json', function (result) {
+        if (this.isMounted()) {
+          this.setState({
+            menu: result.menu.posts,
+            primary: result.primary.posts,
+            secondary: result.secondary.posts,
+            titles: [result.menu.title, result.primary.title, result.secondary.title],
+          });
+        }
+      }.bind(this));
+    },
+  */
 
   render: function render() {
     var active = this.state.active;
     var contentScope = this.state.contentScope;
-    var primaryLocation = this.state.titles[0];
-    var secondaryLocation = this.state.titles[1];
+    var blogname = this.state.titles[0];
+    var primaryLocation = this.state.titles[1];
+    var secondaryLocation = this.state.titles[2];
 
     return React.createElement(
       'div',
       { id: 'content' },
-      React.createElement(MastHead, null),
-      React.createElement(SidebarElement, { location: 'cases', labelTitle: primaryLocation, parent: this }),
-      React.createElement(SidebarElement, { location: 'blogs', labelTitle: secondaryLocation, parent: this }),
+      React.createElement(MastHead, { blogname: blogname }),
+      React.createElement(SidebarElement, { location: 'primary', labelTitle: primaryLocation, parent: this }),
+      React.createElement(SidebarElement, { location: 'secondary', labelTitle: secondaryLocation, parent: this }),
       React.createElement(MainView, { article: this.state[contentScope][active] })
     );
   }
@@ -90,7 +88,7 @@ var MainView = React.createClass({
       React.createElement(
         'div',
         { className: 'featuredImage' },
-        featured_media ? React.createElement(FeaturedImage, { imageID: this.props.article.featured_media, imageSize: 'largeFull' }) : ''
+        this.props.article.featured_media ? React.createElement('img', { src: this.props.article.image_urls.largeWide, imageSize: 'smallWide' }) : ''
       ),
       React.createElement(
         'div',
@@ -115,7 +113,7 @@ var MastHead = React.createClass({
       React.createElement(
         'h1',
         null,
-        'olemak'
+        this.props.blogname
       )
     );
   }
@@ -150,7 +148,7 @@ var SidebarElement = React.createClass({
           React.createElement(
             'a',
             { href: '#' },
-            singleCase.featured_media ? React.createElement(FeaturedImage, { imageID: singleCase.featured_media, imageSize: 'smallWide' }) : '',
+            singleCase.featured_media ? React.createElement('img', { src: singleCase.image_urls.smallWide, imageSize: 'smallWide' }) : '',
             React.createElement(
               'span',
               { className: 'slinky' },
@@ -164,42 +162,4 @@ var SidebarElement = React.createClass({
   }
 });
 
-var FeaturedImage = React.createClass({
-  displayName: 'FeaturedImage',
-
-  getInitialState: function getInitialState() {
-    return {
-      smallWide: 'wp-content/themes/reactionary/assets/images/ajax-loader.gif',
-      largeFull: 'wp-content/themes/reactionary/assets/images/ajax-loader.gif'
-    };
-  },
-
-  imageDataEndpoint: function imageDataEndpoint() {
-    var endpoint = 'wp-json/wp/v2/media/' + this.props.imageID;
-    return endpoint;
-  },
-
-  componentDidMount: function componentDidMount() {
-    $.get(this.imageDataEndpoint(), (function (result) {
-      if (this.isMounted()) {
-        console.log(result);
-        this.setState({
-          'smallWide': result.media_details.sizes.smallWide.source_url,
-          'largeFull': result.media_details.sizes.mediumFull.source_url
-        });
-      }
-    }).bind(this));
-  },
-
-  render: function render() {
-    return React.createElement('img', { src: this.state[this.props.imageSize] });
-  }
-});
-
-var reactionary = React.createElement(App, {
-  blogSource: 'wp-content/themes/reactionary/assets/content/primary.json',
-  caseSource: 'wp-content/themes/reactionary/assets/content/secondary.json' });
-
-React.render(reactionary, document.getElementById('body'));
-
-//         console.log(singleCase.featured_media);
+React.render(React.createElement(App, null), document.getElementById('body'));

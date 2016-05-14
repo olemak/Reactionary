@@ -66,17 +66,29 @@ figure {
   flex-direction: column;
   min-height: 640px;
   @include media('>phone') {
-    min-height: 100vh;
-//    flex-direction: row;
+    min-height: 98vh;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 }
 
     #masthead {
       background-color: $red;
-      flex: 5 1 content;
+      flex: 5 0 auto;
       order: 1;
       h1 {color: $white;}
+      @include media('>tablet') {
+        flex: 1;
+        h1 {
+          transform: rotate(90deg);
+          transform-origin: bottom left;
+          font-size: 6rem;
+          position: absolute;
+          padding-bottom: 0;
+          margin-left: -2rem; 
 
+        }
+      }
     }
 
 
@@ -86,9 +98,14 @@ figure {
       order: 2;
       display: flex;
       flex-direction: row;
+      padding-bottom: 3rem;
       @include media('>tablet') {
-                      
-        min-height: 63vh;
+        flex: 3 0 60vw;
+        min-height: 79vh;
+        p {
+          max-width: 53rem;
+          font-size: 1.4rem;
+        }
       }
       p {
         margin: 0 1rem;
@@ -105,7 +122,7 @@ figure {
 
 
 
-    #cases, #blogs {
+    #primary, #secondary {
       background-color: $white;
       display: flex;
       flex: 0 0 auto;
@@ -155,7 +172,7 @@ figure {
       }
     }
 
-        #cases {
+        #primary {
           order:3;
           background-color: $blue;
           color: $white;
@@ -166,10 +183,13 @@ figure {
           }
         }
 
-        #blogs {
+        #secondary {
           order:4;
           background-color: cornsilk;
-
+          @include media('>tablet') {
+            min-height: 16vh;
+            width: 98vw;
+          }
         }
 
 
