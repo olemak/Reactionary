@@ -22,10 +22,15 @@ body {
   color: #07030b;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6, .excerpt {
   font-family: 'Anton', sans-serif;
   padding: 0.5rem 1rem;
   margin: 0;
+}
+
+.excerpt p {
+  font-size: 1rem;
+  margin-top: 0;
 }
 
 a {
@@ -50,6 +55,13 @@ ul {
 figure {
   margin: 1rem 0;
   width: 100%;
+}
+
+blockquote, #main blockquote p {
+  font-family: monospace, sans-serif;
+  font-size: 1rem;
+  font-weight: 200;
+  margin-bottom: 0.8rem;
 }
 
 .pointer {
@@ -184,7 +196,28 @@ figure {
   #primary {
     flex: 1 1 8rem;
     flex-direction: column;
+    min-width: 320px;
     max-width: 320px;
+  }
+  #primary h3 {
+    transform: none;
+    position: static;
+    width: 320px;
+    margin: 0;
+  }
+  #primary li {
+    max-width: 320px;
+    margin-left: 0;
+    clear: left;
+  }
+  #primary li a {
+    flex-direction: column;
+  }
+  #primary li img {
+    width: 320px;
+  }
+  #primary li h4, #primary li p {
+    width: 320px -10%;
   }
 }
 
@@ -197,6 +230,7 @@ figure {
   #secondary {
     min-height: 16vh;
     width: 98vw;
+    flex-wrap: wrap;
   }
 }
 
@@ -204,3 +238,10 @@ figure {
 ul > h3 {
   text-transform: capitalize;
 }
+
+/************** UTILITIES ***********************/
+/*
+blockquote:after{
+  content: 'copy';
+}
+*/

@@ -5,9 +5,9 @@ var App = React.createClass({
 
   getInitialState: function getInitialState() {
     return {
-      titles: ['Reactionary', 'Blogs', 'Projects'],
-      primary: [{ title: '', excerpt: '', content: '', id: 0 }],
-      secondary: [{ title: '', excerpt: '', content: '', id: 0 }],
+      titles: ['Site Name', 'Primary', 'Secondary'],
+      primary: [{ title: '', excerpt: '', content: '', id: 0 }, { title: '', excerpt: '', content: '', id: 1 }],
+      secondary: [{ title: '', excerpt: '', content: '', id: 2 }, { title: '', excerpt: '', content: '', id: 3 }],
       active: [0],
       contentScope: 'primary'
     };
@@ -40,20 +40,6 @@ var App = React.createClass({
       }
     }).bind(this);
   },
-
-  /*
-      $.get('wp-content/themes/reactionary/assets/content/posts.json', function (result) {
-        if (this.isMounted()) {
-          this.setState({
-            menu: result.menu.posts,
-            primary: result.primary.posts,
-            secondary: result.secondary.posts,
-            titles: [result.menu.title, result.primary.title, result.secondary.title],
-          });
-        }
-      }.bind(this));
-    },
-  */
 
   render: function render() {
     var active = this.state.active;
@@ -88,7 +74,7 @@ var MainView = React.createClass({
       React.createElement(
         'div',
         { className: 'featuredImage' },
-        this.props.article.featured_media ? React.createElement('img', { src: this.props.article.image_urls.largeWide, imageSize: 'smallWide' }) : ''
+        this.props.article.image_urls ? React.createElement('img', { src: this.props.article.image_urls.mediumFull }) : ''
       ),
       React.createElement(
         'div',
@@ -148,12 +134,12 @@ var SidebarElement = React.createClass({
           React.createElement(
             'a',
             { href: '#' },
-            singleCase.featured_media ? React.createElement('img', { src: singleCase.image_urls.smallWide, imageSize: 'smallWide' }) : '',
+            singleCase.image_urls ? React.createElement('img', { src: singleCase.image_urls.smallWide, imageSize: 'smallWide' }) : '',
             React.createElement(
               'span',
               { className: 'slinky' },
               React.createElement('h4', { dangerouslySetInnerHTML: this.rawHTML(singleCase.title) }),
-              React.createElement('h6', { dangerouslySetInnerHTML: this.rawHTML(singleCase.excerpt) })
+              React.createElement('div', { className: 'excerpt', dangerouslySetInnerHTML: this.rawHTML(singleCase.excerpt) })
             )
           )
         );
@@ -163,3 +149,35 @@ var SidebarElement = React.createClass({
 });
 
 React.render(React.createElement(App, null), document.getElementById('body'));
+
+/************ COPYBUTTON ************/
+
+function reactionaryCopybutton() {
+  var hiddenCopyContainer = document.createElement('TEXTAREA');
+  hiddenCopyContainer.style.position = 'absolute';
+  hiddenCopyContainer.style.left = '-200vw';
+  hiddenCopyContainer.id = 'hiddenCopyContainer';
+  window.body.appendChild(hiddenCopyContainer);
+
+  var blockquotes = document.getElementsByTagName('blockquote');
+  if (blockquotes) {
+    for (var i = 0; i < blockquotes.length; i++) {
+      var copyButton = document.createElement('BUTTON');
+      copyButton.className = 'reactionary-copy-button';
+      copyButton.innerHTML = '<h5>Copy</h5>';
+      copyButton.addEventListener('click', reactionaryCopyClickListener.bind(null, blockquotes[i].innerText));
+      blockquotes[i].appendChild(copyButton);
+    }
+  }
+}
+
+function reactionaryCopyClickListener(textToCopy) {
+  var hiddenCopyContainer = document.getElementById('hiddenCopyContainer');
+  hiddenCopyContainer.value = textToCopy;
+  hiddenCopyContainer.select();
+  document.execCommand('copy');
+}
+
+// MAKE REACT INVOKE reactionaryCopybutton ON REFRESH//REFLOW
+// MAKE IT GET <PRE> and <CODE> ELEMENST TOO, BUT...
+// RESTRICT GetByTagName TO #body
