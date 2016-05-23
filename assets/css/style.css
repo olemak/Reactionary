@@ -8,6 +8,7 @@ html {
 
 *, *:before, *:after {
   box-sizing: inherit;
+  word-wrap: break-word;
 }
 
 body {
@@ -57,11 +58,16 @@ figure {
   width: 100%;
 }
 
-blockquote, #main blockquote p {
-  font-family: monospace, sans-serif;
-  font-size: 1rem;
-  font-weight: 200;
-  margin-bottom: 0.8rem;
+code, pre {
+  padding: 2rem;
+  margin: 0 0 0.8rem -1rem;
+  background-color: transparent;
+  border: 1px dotted #a7031f;
+  border-left: none;
+  font-size: 1.4rem;
+  display: block;
+  white-space: normal;
+  position: relative;
 }
 
 .pointer {
@@ -96,6 +102,7 @@ blockquote, #main blockquote p {
 @media (min-width: 769px) {
   #masthead {
     flex: 1;
+    min-width: 10rem;
   }
   #masthead h1 {
     transform: rotate(90deg);
@@ -107,37 +114,83 @@ blockquote, #main blockquote p {
   }
 }
 
+/*************** MAIN CONTENT ******************/
 #main {
   background-color: #faf7f2;
-  flex: 4 1 auto;
   order: 2;
-  display: flex;
-  flex-direction: row;
+  flex: 4 1 auto;
+  flex-wrap: wrap;
   padding-bottom: 3rem;
 }
 
 @media (min-width: 769px) {
   #main {
-    flex: 3 0 60vw;
+    flex: 3 0 70vw;
     min-height: 79vh;
   }
-  #main p {
-    max-width: 53rem;
-    font-size: 1.4rem;
+  #main.collapsed {
+    flex: 0 0 10rem;
+  }
+  #main.collapsed .mainTitle {
+    max-width: 100%;
+  }
+  #main.collapsed .mainImage {
+    max-width: 100%;
+  }
+  #main.collapsed .mainContent {
+    max-height: 23vh;
+    overflow: hidden;
+    font-size: 0.8rem;
+  }
+  #main.collapsed .mainContent * {
+    display: none;
+  }
+  #main.collapsed .mainContent p {
+    display: block;
+  }
+  #main.expanded {
+    flex: 4 1 auto;
   }
 }
 
-#main p {
-  margin: 0 1rem;
+/*************** FEATURED CONTENT ******************/
+.mainTitle {
+  max-width: 40%;
 }
 
-#featuredImage {
-  flex: 1;
+@media (min-width: 769px) {
+  .mainImage {
+    max-width: 50%;
+    min-width: 40%;
+    float: right;
+  }
 }
 
-#textContent {
-  flex: 1;
-  padding-bottom: 1rem;
+.mainContent {
+  color: #a7031f;
+  font-size: 1.4rem;
+  margin-top: 1rem;
+}
+
+.mainContent p {
+  padding-left: 1rem;
+}
+
+.mainContent p, .mainContent pre, .mainContent code, .mainContent h1, .mainContent h2 {
+  max-width: 60rem;
+}
+
+@media (min-width: 1025px) {
+  .mainContent ul {
+    float: right;
+    width: 30%;
+  }
+  .mainContent li h3:before, .mainContent li h4:before, .mainContent li > p:before {
+    content: "\262D";
+    color: #a7031f;
+    padding-right: 0.6rem;
+    font-size: 2rem;
+  }
 }
 
 #primary, #secondary {
@@ -170,6 +223,7 @@ blockquote, #main blockquote p {
     min-width: 120px;
     max-width: 640px;
     margin-left: 3rem;
+    cursor: pointer;
     display: block;
   }
   #primary li a, #secondary li a {
@@ -206,7 +260,9 @@ blockquote, #main blockquote p {
     margin: 0;
   }
   #primary li {
+    flex-grow: 0;
     max-width: 320px;
+    padding-left: 0px;
     margin-left: 0;
     clear: left;
   }
@@ -218,6 +274,18 @@ blockquote, #main blockquote p {
   }
   #primary li h4, #primary li p {
     width: 320px -10%;
+  }
+  #primary li:nth-last-child(2) {
+    margin-top: auto;
+  }
+  #primary.expanded {
+    flex: 4 1 auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 80vw;
+  }
+  #primary.expanded h3.title {
+    width: 100vw;
   }
 }
 
@@ -232,16 +300,100 @@ blockquote, #main blockquote p {
     width: 98vw;
     flex-wrap: wrap;
   }
+  #secondary.expanded {
+    flex: 3 1 80%;
+  }
+}
+
+/************* EXPAND AND COLLAPSE **************/
+.collapsed .mainContent {
+  max-width: 10rem;
+}
+
+.collapsed h3.expandButton:after {
+  content: 'Show more';
+}
+
+.expanded h3.expandButton:after {
+  content: 'Show less';
 }
 
 /********* REALLY SPECIFIC TWEAKS ***************/
+/*********** ENHANCED BLOCKQUOTE ***************/
+@media (min-width: 321px) {
+  blockquote {
+    width: 320px;
+    clear: left;
+    float: left;
+    margin: 0 1rem 0 0;
+    text-align: center;
+    background-color: #a7031f;
+  }
+  blockquote p {
+    color: #faf7f2;
+    font-size: 1.6rem;
+    line-height: 1.6rem;
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 321px) {
+  pre blockquote {
+    color: #faf7f2;
+    font-family: "Maven Pro", sans-serif;
+    font-size: 1.4rem;
+    margin: 1rem 1.4rem 1rem -1rem;
+    padding: 1rem;
+  }
+}
+
 ul > h3 {
   text-transform: capitalize;
 }
 
-/************** UTILITIES ***********************/
-/*
-blockquote:after{
-  content: 'copy';
+.reactionary-copy-button {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border: 1px dotted #a7031f;
+  border-bottom: none;
+  border-right: none;
+  background-color: ghostwhite;
+  transition-duration: 0.2s;
 }
-*/
+
+.reactionary-copy-button:hover {
+  background-color: #a7031f;
+}
+
+.reactionary-copy-button:hover h5 {
+  transition-duration: 0.2s;
+  color: #faf7f2;
+}
+
+.reactionary-tweet-link {
+  text-align: right;
+}
+
+.reactionary-tweet-link h5 {
+  color: #faf7f2;
+  border-radius: 0.5rem;
+  margin: 0.5rem;
+  width: 40%;
+  border: 1px solid #a7031f;
+  margin-left: auto;
+}
+
+.reactionary-tweet-link h5:before {
+  content: "\25B3";
+  margin: 0 1rem 0 0.4rem;
+  font-size: 1rem;
+}
+
+.reactionary-tweet-link h5:hover {
+  color: white;
+  border: 1px solid #faf7f2;
+  background-color: #890219;
+}
+
+/************** UTILITIES ***********************/

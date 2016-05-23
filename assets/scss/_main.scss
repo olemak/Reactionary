@@ -12,6 +12,7 @@ html {
 }
 *, *:before, *:after {
   box-sizing: inherit;
+  word-wrap: break-word;
 }
 
 
@@ -64,11 +65,17 @@ figure {
   width: 100%;
 }
 
-blockquote, #main blockquote p {
-  font-family: monospace, sans-serif;
-  font-size: 1rem;
-  font-weight: 200;
-  margin-bottom: 0.8rem;
+code, pre {
+  //margin-left: 1rem;
+  padding: 2rem;
+  margin: 0 0 0.8rem -1rem;
+  background-color: transparent;
+  border: 1px dotted $red;
+  border-left: none;
+  font-size: 1.4rem;
+  display: block;
+  white-space: normal;
+  position: relative;
 }
 
 .pointer {
@@ -96,6 +103,7 @@ blockquote, #main blockquote p {
       h1 {color: $white;}
       @include media('>tablet') {
         flex: 1;
+        min-width: 10rem; 
         h1 {
           transform: rotate(90deg);
           transform-origin: bottom left;
@@ -103,41 +111,89 @@ blockquote, #main blockquote p {
           position: absolute;
           padding-bottom: 0;
           margin-left: -2rem; 
-
         }
       }
     }
 
-
+/*************** MAIN CONTENT ******************/
     #main {
       background-color: $white;
-      flex: 4 1 auto;
       order: 2;
-      display: flex;
-      flex-direction: row;
+      flex: 4 1 auto;
+//      display: flex;
+//      flex-direction: row;
+      flex-wrap: wrap;
       padding-bottom: 3rem;
       @include media('>tablet') {
-        flex: 3 0 60vw;
+        flex: 3 0 70vw;
         min-height: 79vh;
-        p {
-          max-width: 53rem;
-          font-size: 1.4rem;
+        &.collapsed {
+          flex: 0 0 10rem;
+          .mainTitle{ max-width: 100%;}
+          .mainImage{ max-width: 100%;}
+          .mainContent{
+            max-height: 23vh;
+            overflow: hidden;
+            font-size: 0.8rem;
+            blockquote, ul, pre, code {
+            }
+            * {
+              display: none;
+            }
+            p {
+              display: block;
+            }
+          }
+        }
+        &.expanded {
+          flex: 4 1 auto;
         }
       }
-      p {
-        margin: 0 1rem;
+    }
+
+/*************** FEATURED CONTENT ******************/
+
+    .mainTitle {
+  //    align-self: flex-start;
+  //    border: 1px solid green;
+      max-width: 40%;
+  //    flex: 2 0 50%;
+    }
+
+    .mainImage {
+      @include media('>tablet') {
+        max-width: 50%;
+        min-width: 40%;
+        float: right;
+  //      order: 1;
       }
     }
 
-    #featuredImage {
-      flex: 1;
+    .mainContent {
+      color: $red;
+  //    order: 2;
+      font-size: 1.4rem;
+  //    flex: 1 0;
+      margin-top: 1rem;
+      p {
+        padding-left: 1rem;
+      }
+      p, pre, code, h1, h2 {
+        max-width: 60rem;
+      }
+      @include media('>desktop') {
+        ul {
+          float: right;
+          width: 30%;
+        }
+        li h3:before, li h4:before, li >p:before {
+          content: "\262D";
+          color: $red;
+          padding-right: 0.6rem;
+          font-size: 2rem;
+        }
+      }
     }
-    #textContent {
-      flex: 1;
-      padding-bottom: 1rem;
-    }
-
-
 
     #primary, #secondary {
       background-color: $white;
@@ -146,7 +202,6 @@ blockquote, #main blockquote p {
       margin: 0;
       padding-top: 0;
           h4, p {
-         //   max-width: 320px;
           }
       @include media('>tablet') {
         position: relative;
@@ -170,6 +225,7 @@ blockquote, #main blockquote p {
           min-width: 120px;
           max-width: 640px;
           margin-left: 3rem;
+          cursor: pointer;
           display: block;
           a {
             flex: 1 1 auto;
@@ -184,7 +240,6 @@ blockquote, #main blockquote p {
           h4 {
             font-size: 1.6rem;
           }
-
         }
       }
     }
@@ -193,7 +248,7 @@ blockquote, #main blockquote p {
           order:3;
           background-color: $blue;
           color: $white;
-          @include media('>tablet') {
+          @include media('>tablet') {    
             h3 {
               transform: none;
               position: static;
@@ -205,8 +260,11 @@ blockquote, #main blockquote p {
             min-width: $smallWide;
             max-width: $smallWide;
             li {
+              flex-grow: 0;
               max-width: $smallWide;
+              padding-left: 0px;
               margin-left: 0;
+
               clear: left;
               a {
                 flex-direction: column;
@@ -216,6 +274,18 @@ blockquote, #main blockquote p {
               }
               h4, p {
                 width: ($smallWide -10%);
+              }
+              &:nth-last-child(2) {
+                margin-top: auto;
+              }
+            }
+            &.expanded {
+              flex: 4 1 auto;
+              flex-direction: row;
+              flex-wrap: wrap;
+              max-width: (80vw);
+              h3.title {
+                width: 100vw;
               }
             }
           }
@@ -228,28 +298,108 @@ blockquote, #main blockquote p {
             min-height: 16vh;
             width: 98vw;
             flex-wrap: wrap;
-            li {
-//              width: 640px;
-//              min-width: $smallWide;
-//              max-width: $largeWide;
+            &.expanded{
+              flex: 3 1 80%;
             }
           }
         }
 
 
+/************* EXPAND AND COLLAPSE **************/
+
+          .collapsed .mainContent{
+            max-width: 10rem;
+          }
+
+          .collapsed {
+            h3.expandButton:after{
+              content: 'Show more';
+            }
+          }
+          .expanded {
+            h3.expandButton:after{
+              content: 'Show less';
+            }
+          }
+
+
 /********* REALLY SPECIFIC TWEAKS ***************/
+
+/*********** ENHANCED BLOCKQUOTE ***************/
+
+blockquote {
+    @include media('>phone') {
+    width: $smallWide;
+    clear: left;
+    float: left;
+    margin: 0 1rem 0 0;
+    text-align: center;
+    background-color: $red;
+    p {
+      color: $white;
+      font-size: 1.6rem;
+      line-height: 1.6rem;
+      padding: 1rem;
+    }
+  }
+}
+
+pre blockquote {
+  @include media('>phone'){
+    color: $white;
+    font-family: "Maven Pro", sans-serif;
+    font-size: 1.4rem;
+    margin: 1rem 1.4rem 1rem -1rem;
+    padding: 1rem;
+    br {
+
+    }
+  }
+} 
 
 ul>h3 {
  text-transform: capitalize;
 }
 
+.reactionary-copy-button {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border: 1px dotted $red;
+  border-bottom: none;
+  border-right: none;
+  background-color: ghostwhite;
+  transition-duration: 0.2s;
+  &:hover {
+    background-color: $red;
+    h5 {
+      transition-duration: 0.2s;
+      color: $white;
+    }
+  }
+}
 
-
+.reactionary-tweet-link {
+  text-align: right;
+  h5 {
+    color: $white;
+    border-radius: 0.5rem;
+    margin: 0.5rem;
+    width: 40%;
+    border: 1px solid $red;
+    margin-left: auto;
+    &:before {
+      content:  "\25B3";
+      margin: 0 1rem 0 0.4rem ;
+      font-size: 1rem;
+    }
+    &:hover {
+      color: lighten($white, 30%);
+      border: 1px solid $white;
+      background-color: darken($red, 6%);
+    }
+  }
+}
 
 
 /************** UTILITIES ***********************/
-/*
-blockquote:after{
-  content: 'copy';
-}
-*/
