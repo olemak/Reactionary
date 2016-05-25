@@ -134,6 +134,7 @@ code, pre {
           .mainContent{
             max-height: 23vh;
             overflow: hidden;
+           // transition-property: width;
             font-size: 0.8rem;
             blockquote, ul, pre, code {
             }
@@ -223,8 +224,9 @@ code, pre {
         li {
           flex: 1 1 23%;
           min-width: 120px;
-          max-width: 640px;
+      //    max-width: 640px;
           margin-left: 3rem;
+          padding-bottom: 2rem; 
           cursor: pointer;
           display: block;
           a {
@@ -280,12 +282,20 @@ code, pre {
               }
             }
             &.expanded {
-              flex: 4 1 auto;
+              order: 1;
+              flex: 4 1 33%;
               flex-direction: row;
               flex-wrap: wrap;
               max-width: (80vw);
+              justify-content: space-between;
               h3.title {
                 width: 100vw;
+              }
+              li {
+
+              }
+              li:nth-last-child(2) {
+                margin-top: 0;
               }
             }
           }
@@ -299,9 +309,30 @@ code, pre {
             width: 98vw;
             flex-wrap: wrap;
             &.expanded{
-              flex: 3 1 80%;
+              flex: 4 1 60vw;
+              align-content: flex-start;
+            }
+            li {
+              flex: 1 1 24%;
+              padding: 1rem;
+            }
+            h4, .excerpt {
+            padding-left: 0;
+            width: $smallWide;
+            }
+            li:last-child{
+              margin: 0;
+ //             width: 1rem;
+              max-width: 5rem;
+//              overflow: hidden;
+              position: absolute;
+              right: 0;
+              .expandButton{
+                margin-left: 0;
+              }
             }
           }
+
         }
 
 
@@ -311,11 +342,11 @@ code, pre {
             max-width: 10rem;
           }
 
-          .collapsed {
+//          .collapsed {
             h3.expandButton:after{
               content: 'Show more';
             }
-          }
+//        }
           .expanded {
             h3.expandButton:after{
               content: 'Show less';

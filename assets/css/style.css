@@ -221,8 +221,8 @@ code, pre {
   #primary li, #secondary li {
     flex: 1 1 23%;
     min-width: 120px;
-    max-width: 640px;
     margin-left: 3rem;
+    padding-bottom: 2rem;
     cursor: pointer;
     display: block;
   }
@@ -279,13 +279,18 @@ code, pre {
     margin-top: auto;
   }
   #primary.expanded {
-    flex: 4 1 auto;
+    order: 1;
+    flex: 4 1 33%;
     flex-direction: row;
     flex-wrap: wrap;
     max-width: 80vw;
+    justify-content: space-between;
   }
   #primary.expanded h3.title {
     width: 100vw;
+  }
+  #primary.expanded li:nth-last-child(2) {
+    margin-top: 0;
   }
 }
 
@@ -301,7 +306,25 @@ code, pre {
     flex-wrap: wrap;
   }
   #secondary.expanded {
-    flex: 3 1 80%;
+    flex: 4 1 60vw;
+    align-content: flex-start;
+  }
+  #secondary li {
+    flex: 1 1 24%;
+    padding: 1rem;
+  }
+  #secondary h4, #secondary .excerpt {
+    padding-left: 0;
+    width: 320px;
+  }
+  #secondary li:last-child {
+    margin: 0;
+    max-width: 5rem;
+    position: absolute;
+    right: 0;
+  }
+  #secondary li:last-child .expandButton {
+    margin-left: 0;
   }
 }
 
@@ -310,7 +333,7 @@ code, pre {
   max-width: 10rem;
 }
 
-.collapsed h3.expandButton:after {
+h3.expandButton:after {
   content: 'Show more';
 }
 

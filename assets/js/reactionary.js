@@ -5,11 +5,16 @@ var App = React.createClass({
 
   getInitialState: function getInitialState() {
     return {
-      titles: ['Site Name', 'Primary', 'Secondary'],
-      primary: [{ title: '', excerpt: '', content: '', id: 0 }, { title: '', excerpt: '', content: '', id: 1 }],
-      secondary: [{ title: '', excerpt: '', content: '', id: 2 }, { title: '', excerpt: '', content: '', id: 3 }],
+      //       titles: ['Site Name', 'Primary', 'Secondary'],
+      content: {
+        menu: { posts: [{ title: 'Menu item #1', excerpt: '', content: '', id: 0 }, { title: 'Menu item #2', excerpt: '', content: '', id: 1 }], title: 'Menu', status: 'collapsed', displayItems: 2 },
+        primary: { posts: [{ title: '', excerpt: '', content: '', id: 0 }, { title: '', excerpt: '', content: '', id: 1 }], title: 'Primary', status: 'collapsed', displayItems: 2 },
+        secondary: { posts: [{ title: '', excerpt: '', content: '', id: 0 }, { title: '', excerpt: '', content: '', id: 1 }], title: 'Secondary', status: 'collapsed', displayItems: 2 }
+      },
+      //       status: {main: 'expanded', primary: 'collapsed', primaryCount: 3, secondary: 'collapsed', secondaryCount: 4},
       active: [0],
-      contentScope: 'primary'
+      contentScope: 'primary',
+      mainStatus: 'expanded'
     };
   },
 
@@ -20,12 +25,11 @@ var App = React.createClass({
   updateMainView: function updateMainView(i, scopetype) {
     this.setState({ active: i });
     this.setState({ contentScope: scopetype });
-    document.getElementById('main').classList.remove('collapsed');
-    document.getElementById('main').classList.add('expanded');
-    document.getElementById('primary').classList.remove('expanded');
-    document.getElementById('primary').classList.add('collapsed');
-    document.getElementById('secondary').classList.remove('expanded');
-    document.getElementById('secondary').classList.add('collapsed');
+    var newState = this.state.status;
+    newState.main = 'expanded';
+    newState.primary = 'collapsed';
+    newState.secondary = 'collapsed';
+    this.setState({ status: newState });
   },
 
   componentDidMount: function componentDidMount() {
@@ -36,12 +40,15 @@ var App = React.createClass({
       if (connection.readyState == 4 && connection.status == 200) {
         var result = JSON.parse(connection.responseText);
         if (this.isMounted()) {
-          this.setState({
-            menu: result.menu.posts,
-            primary: result.primary.posts,
-            secondary: result.secondary.posts,
-            titles: [result.menu.title, result.primary.title, result.secondary.title]
-          });
+          var newState = this.state.content;
+          newState.menu.posts = result.menu.posts;
+          newState.menu.title = result.menu.title;
+          newState.menu.displayItems = result.menu.posts.length;
+          newState.primary.posts = result.primary.posts;
+          newState.primary.title = result.primary.title;
+          newState.secondary.posts = result.secondary.posts;
+          newState.secondary.title = result.secondary.title;
+          this.setState({ content: newState });
         }
       }
     }).bind(this);
@@ -50,9 +57,9 @@ var App = React.createClass({
   render: function render() {
     var active = this.state.active;
     var contentScope = this.state.contentScope;
-    var blogname = this.state.titles[0];
-    var primaryLocation = this.state.titles[1];
-    var secondaryLocation = this.state.titles[2];
+    var blogname = this.state.content.menu.title;
+    var primaryLocation = this.state.content.primary.title;
+    var secondaryLocation = this.state.content.secondary.title;
 
     return React.createElement(
       'div',
@@ -60,7 +67,7 @@ var App = React.createClass({
       React.createElement(MastHead, { blogname: blogname }),
       React.createElement(SidebarElement, { location: 'primary', labelTitle: primaryLocation, initialItemNumber: 3, parent: this }),
       React.createElement(SidebarElement, { location: 'secondary', labelTitle: secondaryLocation, initialItemNumber: 4, parent: this }),
-      React.createElement(MainView, { article: this.state[contentScope][active] })
+      React.createElement(MainView, { article: this.state.content[contentScope].posts[active], status: this.state.mainStatus })
     );
   }
 });
@@ -77,10 +84,9 @@ var MainView = React.createClass({
       var $screensize = parseInt(screen.width / 640);
       var imageurl = $screensize < 2 ? this.props.article.image_urls.smallWide : $screensize < 3 ? this.props.article.image_urls.mediumWide : this.props.article.image_urls.largeWide;
     }
-
     return React.createElement(
       'main',
-      { id: 'main', className: 'expanded' },
+      { id: 'main', className: this.props.status },
       this.props.article.image_urls ? React.createElement('img', { className: 'mainImage', src: imageurl }) : '',
       React.createElement('h1', { className: 'mainTitle', dangerouslySetInnerHTML: this.rawHTML(this.props.article.title) }),
       React.createElement('div', { className: 'mainContent', dangerouslySetInnerHTML: this.rawHTML(this.props.article.content) })
@@ -119,8 +125,7 @@ var SidebarElement = React.createClass({
 
   getInitialState: function getInitialState() {
     return {
-      displayItems: this.props.initialItemNumber, // How many sidebar items should the first page loop through
-      status: 'collapsed' };
+      displayItems: this.props.initialItemNumber };
   },
 
   rawHTML: function rawHTML(text) {
@@ -134,37 +139,27 @@ var SidebarElement = React.createClass({
     this.setState({ displayItems: this.props.initialItemNumber });
   },
 
-  expandSideBar: function expandSideBar(event) {
-    var main = document.getElementById('main');
-    var oldMainDisplayClass = '';
-    var newMainDisplayClass = '';
-
-    if (this.state.status === 'collapsed') {
-      // initial state / Collapsed -> Expanded
-      this.setState({ status: 'expanded' });
-      this.setState({ clickMessage: 'Show Less' });
-      this.setState({ displayItems: this.props.parent.state[this.props.location].length }); // show all the items
-      oldMainDisplayClass = 'expanded';
-      newMainDisplayClass = 'collapsed';
+  expandSideBar: function expandSideBar(event, loc) {
+    var newStatus = this.props.parent.state.status;
+    if (loc === 'primary') {
+      newStatus.primary = newStatus.primary === 'collapsed' ? 'expanded' : 'collapsed';
+      newStatus.secondary = 'collapsed';
     } else {
-      // When closing down / expanded -> collapsed
-      this.setState({ status: 'collapsed' });
-      this.setState({ clickMessage: 'Show More' });
-      this.setState({ displayItems: this.props.initialItemNumber }); // show all the items
-      oldMainDisplayClass = 'collapsed';
-      newMainDisplayClass = 'expanded';
-    };
+      newStatus.primary = 'collapsed';
+      newStatus.secondary = newStatus.secondary === 'collapsed' ? 'expanded' : 'collapsed';
+    }
+    newStatus.main = newStatus.secondary === 'collapsed' && (newStatus.primary === 'collapsed' && newStatus.secondary === 'collapsed') ? 'expanded' : 'collapsed';
 
-    main.classList.remove(oldMainDisplayClass);
-    main.classList.add(newMainDisplayClass);
+    this.props.parent.setState({ status: newStatus });
+    this.setState({ displayItems: this.props.parent.state[loc].length });
   },
 
   render: function render() {
     var loc = this.props.location;
-    var displayedItems = this.props.parent.state[loc].slice(0, this.state.displayItems);
+    var displayedItems = this.props.parent.state.content[loc].posts.slice(0, this.state.displayItems);
     return React.createElement(
       'ul',
-      { id: loc, className: this.state.status },
+      { id: loc, className: this.props.parent.state.content[loc].status },
       React.createElement(
         'h3',
         { className: 'title' },
@@ -185,7 +180,7 @@ var SidebarElement = React.createClass({
       }, this),
       React.createElement(
         'li',
-        { onClick: this.expandSideBar },
+        { onClick: this.expandSideBar.bind(null, event, loc) },
         React.createElement('h3', { className: 'expandButton' })
       )
     );
@@ -255,4 +250,5 @@ function reactionaryScreenSize() {
   var size = parseInt(screen.width / 640);
   console.log(size);
 }
-// Toggle class - it is either either "collapsed" or "expanded"
+// How many sidebar items should the first page loop through
+//     status: 'collapsed',      // Toggle class - it is either either "collapsed" or "expanded"
