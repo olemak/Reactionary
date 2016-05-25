@@ -5,14 +5,12 @@ var App = React.createClass({
 
   getInitialState: function getInitialState() {
     return {
-      //       titles: ['Site Name', 'Primary', 'Secondary'],
       content: {
-        menu: { posts: [{ title: 'Menu item #1', excerpt: '', content: '', id: 0 }, { title: 'Menu item #2', excerpt: '', content: '', id: 1 }], title: 'Menu', status: 'collapsed', displayItems: 2 },
-        primary: { posts: [{ title: '', excerpt: '', content: '', id: 0 }, { title: '', excerpt: '', content: '', id: 1 }], title: 'Primary', status: 'collapsed', displayItems: 2 },
-        secondary: { posts: [{ title: '', excerpt: '', content: '', id: 0 }, { title: '', excerpt: '', content: '', id: 1 }], title: 'Secondary', status: 'collapsed', displayItems: 2 }
+        menu: { posts: [{ title: 'Menu item #1', excerpt: '', content: '', id: 0 }, { title: 'Menu item #2', excerpt: '', content: '', id: 1 }], title: 'Menu', status: 'collapsed', initialItemNumber: 2, displayItems: 2 },
+        primary: { posts: [{ title: '', excerpt: '', content: '', id: 0 }, { title: '', excerpt: '', content: '', id: 1 }], title: 'Primary', status: 'collapsed', initialItemNumber: 2, displayItems: 2 },
+        secondary: { posts: [{ title: '', excerpt: '', content: '', id: 0 }, { title: '', excerpt: '', content: '', id: 1 }], title: 'Secondary', status: 'collapsed', initialItemNumber: 2, displayItems: 2 }
       },
-      //       status: {main: 'expanded', primary: 'collapsed', primaryCount: 3, secondary: 'collapsed', secondaryCount: 4},
-      active: [0],
+      active: 0,
       contentScope: 'primary',
       mainStatus: 'expanded'
     };
@@ -25,11 +23,13 @@ var App = React.createClass({
   updateMainView: function updateMainView(i, scopetype) {
     this.setState({ active: i });
     this.setState({ contentScope: scopetype });
-    var newState = this.state.status;
-    newState.main = 'expanded';
-    newState.primary = 'collapsed';
-    newState.secondary = 'collapsed';
+    var newState = this.state.content;
+    newState.primary.status = 'collapsed';
+    newState.primary.displayItems = newState.primary.initialItemNumber;
+    newState.secondary.status = 'collapsed';
+    newState.secondary.displayItems = newState.secondary.initialItemNumber;
     this.setState({ status: newState });
+    this.setState({ mainStatus: 'expanded' });
   },
 
   componentDidMount: function componentDidMount() {
@@ -98,7 +98,6 @@ var MainView = React.createClass({
     var tags = ['pre', 'code'];
     reactionaryCopybutton(main, tags);
   }
-
 });
 
 var MastHead = React.createClass({
@@ -124,8 +123,14 @@ var SidebarElement = React.createClass({
   displayName: 'SidebarElement',
 
   getInitialState: function getInitialState() {
-    return {
-      displayItems: this.props.initialItemNumber };
+    return {};
+  },
+
+  componentWillMount: function componentWillMount() {
+    var newState = this.props.parent.state;
+    newState.content[this.props.location].initialItemNumber = this.props.initialItemNumber;
+    newState.content[this.props.location].displayItems = this.props.initialItemNumber;
+    this.props.parent.setState({ content: newState.content });
   },
 
   rawHTML: function rawHTML(text) {
@@ -135,28 +140,25 @@ var SidebarElement = React.createClass({
   updateMainView: function updateMainView(i, loc) {
     window.scrollTo(0, 0);
     this.props.parent.updateMainView(i, loc);
-    this.setState({ status: 'collapsed' });
-    this.setState({ displayItems: this.props.initialItemNumber });
   },
 
   expandSideBar: function expandSideBar(event, loc) {
-    var newStatus = this.props.parent.state.status;
-    if (loc === 'primary') {
-      newStatus.primary = newStatus.primary === 'collapsed' ? 'expanded' : 'collapsed';
-      newStatus.secondary = 'collapsed';
-    } else {
-      newStatus.primary = 'collapsed';
-      newStatus.secondary = newStatus.secondary === 'collapsed' ? 'expanded' : 'collapsed';
-    }
-    newStatus.main = newStatus.secondary === 'collapsed' && (newStatus.primary === 'collapsed' && newStatus.secondary === 'collapsed') ? 'expanded' : 'collapsed';
+    var newState = this.props.parent.state.content;
+    var thisSidebar = loc === 'primary' ? 'primary' : 'secondary';
+    var otherSidebar = loc === 'primary' ? 'secondary' : 'primary';
 
-    this.props.parent.setState({ status: newStatus });
-    this.setState({ displayItems: this.props.parent.state[loc].length });
+    newState[thisSidebar].status = newState[thisSidebar].status === 'collapsed' ? 'expanded' : 'collapsed';
+    newState[otherSidebar].status = 'collapsed';
+    console.log(newState[loc]);
+    newState[loc].displayItems = newState[loc].status === 'expanded' ? newState[loc].posts.length : newState[loc].initialItemNumber;
+    newState.mainStatus = newState.primary === 'collapsed' && newState.secondary === 'collapsed' ? 'expanded' : 'collapsed';
+    this.props.parent.setState({ content: newState });
   },
 
   render: function render() {
     var loc = this.props.location;
-    var displayedItems = this.props.parent.state.content[loc].posts.slice(0, this.state.displayItems);
+    var cutoff = this.props.parent.state.content[loc].displayItems;
+    var displayedItems = this.props.parent.state.content[loc].posts.slice(0, cutoff);
     return React.createElement(
       'ul',
       { id: loc, className: this.props.parent.state.content[loc].status },
@@ -250,5 +252,6 @@ function reactionaryScreenSize() {
   var size = parseInt(screen.width / 640);
   console.log(size);
 }
-// How many sidebar items should the first page loop through
+
+//    displayItems: this.props.initialItemNumber,          // How many sidebar items should the first page loop through
 //     status: 'collapsed',      // Toggle class - it is either either "collapsed" or "expanded"
