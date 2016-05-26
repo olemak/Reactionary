@@ -193,6 +193,9 @@ code, pre {
           padding-right: 0.6rem;
           font-size: 2rem;
         }
+        .collapsed {
+          flex: 1 1 15%;
+        }
       }
     }
 
@@ -280,10 +283,14 @@ code, pre {
               &:nth-last-child(2) {
                 margin-top: auto;
               }
+              &:last-child{
+                padding-bottom: 0;
+                margin-bottom: -3px;
+              }
             }
             &.expanded {
               order: 1;
-              flex: 4 1 33%;
+              flex: 4 1 80%;
               flex-direction: row;
               flex-wrap: wrap;
               max-width: (80vw);
@@ -315,6 +322,7 @@ code, pre {
             li {
               flex: 1 1 24%;
               padding: 1rem;
+              max-width: $smallWide;
             }
             h4, .excerpt {
             padding-left: 0;

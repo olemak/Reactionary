@@ -1,0 +1,397 @@
+$red: #a7031f;
+$black: #07030b;
+$white: #faf7f2;
+$blue: #5f6b85;
+$gray: #d5cce1;
+
+$smallWide: 320px;
+$largeWide: 640px;
+
+// BORDERBOX
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+  word-wrap: break-word;
+}
+
+
+// GENERAL STYLES
+
+body {
+  background-color: $white;
+}
+
+*  {
+	transition-duration: 1s;
+	transition-timing-function: ease-in;
+	font-family: 'Maven Pro', sans-serif;
+	font-weight: 400;
+        color: $black;
+}
+
+h1, h2, h3, h4, h5, h6, .excerpt {
+  font-family: 'Anton', sans-serif;
+//  padding: 0.5rem 1rem;
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0.2rem;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+p, pre, pre p, blockquote, blockquote p {
+        white-space: pre-wrap;
+        max-width: 100%;
+}
+
+
+/************* #CONTENT WRAPS ALL VISIBLE ELEMENTS **************/
+
+#content {
+  display: flex;
+  flex-direction: column;
+  min-height: $largeWide;
+  @include media('>phone') {
+    min-height: 98vh;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+
+/************* #MASTHEAD CONTAINS TOP MENU AND SITE TITLE **************/
+#masthead {
+  background-color: $red;
+  flex: 4 0 98vw;
+  order: 1;
+  padding: 0.1rem 0.6rem;
+
+  h1 {color: $white;}
+  @include media('>desktop') {
+ //   flex: 1 0 10%;
+    min-width: 10rem; 
+    h1 {
+//      background-color: $red;
+ //     transform: rotate(90deg);
+ //     transform-origin: bottom left;
+      font-size: 6rem;
+ //     position: absolute;
+      padding-bottom: 0;
+      margin-left: -0.88rem;
+      margin-top: -2.01rem;
+    }
+  }
+}
+
+/*************** #MAIN CONTAINS THE CURRENTLY DISPLAYED POST/PAGE *************/
+#main {
+        background-color: $white;
+        order: 2;
+        flex-wrap: wrap;
+        padding-bottom: 3rem;
+ //       max-width: 100%;
+        .mainTitle {
+        }
+        .mainImage {
+                width: $smallWide;
+                @include media('>phone') {
+                        float: right;
+                }
+                @include media('>tablet') {
+                        max-width: 50%;
+                        min-width: 40%;
+                } 
+                @include media('>desktop') {
+                }
+        }
+        .mainContent {
+                font-size: 1rem;
+                margin-top: -1rem;
+        }
+        @include media('>tablet') {
+                flex: 3 0 70vw;
+                min-height: 79vh;
+        }
+        &.expanded { // Default
+                flex: 4 1 auto; 
+        }
+        &.collapsed {
+                display: none;
+                blockquote, ul, ol, pre, code {
+                        display: none;
+                }
+                @include media('>tablet') {
+                        display: flex;
+                        flex: 0 0 10rem;
+                        .mainContent {
+                                max-height: 23vh;
+                                overflow: hidden;
+                                font-size: 0.8rem;
+                        }
+                }
+        }
+}
+    
+
+/******************** SIDEBARS **********************/
+
+#primary, #secondary {
+        background-color: $white;
+        display: flex;
+        flex-direction: column;
+        order: 4;
+        @include media('>desktop') {
+                flex-basis: 2;
+                max-width: 50%;
+        }
+        h3 {
+                background-color: $red;
+                color: $white;
+                height: 3rem;
+                text-align: center;
+                padding-top: 0.6rem;
+                margin: -3px;
+                @include media('>tablet') {
+                //        transform: rotate(90deg);
+                //        transform-origin: top left;
+                //        width: 160px;
+                //        position: absolute;
+                //        margin: 0 3rem;
+                //        height: 3rem;
+                }        
+        }
+        li {
+                display: flex;
+                flex-basis: 1;
+                flex-direction: column;
+                cursor: pointer;
+                @include media('>phone') {
+                        flex-basis: 2; 
+                        padding-bottom: 2rem;
+                }
+                h4 {
+                        order: 1;
+                        font-size: 1.2rem;
+                        @include media('>phone') {
+                                font-size: 1.6rem;
+                                flex: 1 1 50%;
+                                order: 2;
+                        }
+                }
+                h4, p {
+                        margin: 0.4rem;
+                }
+                .excerpt {
+                        order: 3;
+                        @include media('>phone') {
+                                flex: 1 1 50%;
+                        }
+                }
+                &.hasimage {
+                        @include media('>phone') {
+                                display: block;
+                                max-width: $smallWide;
+                                img {
+                                        float: left;
+                                }
+                                h4 {
+                                        display: flex;
+                                        margin: 0;
+                                        padding: 0 0.4rem;
+                                }
+                                .excerpt {
+                                        display: flex;
+                                        order: 3;
+                                }
+                        }
+                }
+
+                &.hasimage {
+                        display: flex;
+                        min-width: 100%;
+                        h4 {
+                                order: 1;
+                                text-shadow: 2px 2px $white;
+                                position: absolute;
+                        }
+                        img {
+                                order: 2;
+                                max-width: $smallWide;
+                                margin-left: auto;
+                        }
+                        .excerpt {
+                                order: 3;
+                                p {
+                                  //      color: $white;
+                                        padding-left: 0.4rem;
+                                        margin-bottom: 0;
+                                        max-width: $smallWide;
+                                        margin-left: auto;
+                                }
+                        }
+                }
+        }
+}
+
+/************** TWEAKS FOR LARGE SCREENS ********************/
+@media (min-width: 1200px) {
+        #content {
+                align-items: stretch;
+                margin-bottom: 3rem;
+        }
+        #main {
+                padding-left: 1rem;
+                padding-bottom: 8rem;
+                width: 70vw;            ////
+                .mainTitle {
+                        padding-top: 3rem;
+                        font-size: 3rem;
+                        max-width: 50%;
+                }
+                .mainContent {
+                        padding-top: 3rem;
+                        max-width: 100%;
+                        font-size: 1.2rem;
+                }
+                .mainImage {
+                        margin-left: 3rem;
+                }
+                &.expanded {
+                        flex: 2 1 auto;
+                }
+        }
+        #primary, #secondary {
+                max-width: 25vw;
+                margin-top: 0;
+        }
+        #primary {
+                flex-grow: 1;
+                li:nth-last-child(2) {
+                        margin-top: auto;
+                }
+                .expandButton{
+                        width: $smallWide;
+                        align-self: flex-end;
+                }
+        }
+        #secondary {
+                flex-direction: row;
+                min-width: 98vw;
+                flex-wrap: wrap;
+                position: relative;
+                justify-content: space-between;
+                li {
+                        flex: 1 0 $smallWide;
+                        max-width: $smallWide;
+                        .mainTitle {
+                        }
+                }
+                li.hasimage {
+                        max-width: $smallWide;
+                        min-width: $smallWide;
+                }
+                h3.title {
+                //        position: absolute;
+                        margin-top: -5.4rem;
+                        width: $smallWide;
+                }
+                h3.expandButton {
+                //        position: absolute;
+                //        bottom: -3rem;
+                //        right: 0;
+                        margin-top: 3rem;
+                        width: $smallWide;
+                }
+        }
+}
+
+
+/************** TWEAKS FOR REALLY LARGE SCREENS ********************/
+@media (min-width: 1560px) {
+        #content {
+                align-items: stretch;
+                margin-bottom: 3rem;
+        }
+        #main {
+                padding-left: 1rem;
+                padding-bottom: 8rem;
+                min-width: 60vw;
+
+                .mainTitle {
+                        padding-top: 3rem;
+                        font-size: 3rem;
+                }
+                .mainContent {
+                        padding-top: 3rem;
+                        max-width: 70rem;
+                        font-size: 1.2rem;
+                }
+                .mainImage {
+                        margin-left: 3rem;
+                }
+        }
+        #primary, #secondary {
+                max-width: 25vw;
+                margin-top: 0;
+        }
+        #primary {
+                flex-grow: 1;
+                li:nth-last-child(2) {
+                        margin-top: auto;
+                }
+                .expandButton{
+                        width: $smallWide;
+                        align-self: flex-end;
+                }
+        }
+        #secondary {
+                flex-direction: row;
+                min-width: 98vw;
+                flex-wrap: wrap;
+                position: relative;
+                justify-content: space-between;
+                li {
+                        flex: 1 0 $smallWide;
+                        max-width: $smallWide;
+                        .mainTitle {
+                        }
+                }
+                li.hasimage {
+                        max-width: $smallWide;
+                        min-width: $smallWide;
+                }
+                h3.title {
+                        position: absolute;
+                        margin-top: -5.4rem;
+                        width: $smallWide;
+                }
+                h3.expandButton {
+                        position: absolute;
+                        bottom: -3rem;
+                        right: 0;
+                        width: $smallWide;
+                }
+        }
+}
+        
+
+/************* EXPAND AND COLLAPSE **************/
+
+          .collapsed .mainContent{
+            max-width: 10rem;
+          }
+          h3.expandButton:after{
+              content: 'Show more';
+            }
+          .expanded {
+            h3.expandButton:after{
+              content: 'Show less';
+            }
+          }

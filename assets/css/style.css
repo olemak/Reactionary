@@ -25,27 +25,7 @@ body {
 
 h1, h2, h3, h4, h5, h6, .excerpt {
   font-family: 'Anton', sans-serif;
-  padding: 0.5rem 1rem;
   margin: 0;
-}
-
-.excerpt p {
-  font-size: 1rem;
-  margin-top: 0;
-}
-
-a {
-  text-decoration: none;
-  color: #5f6b85;
-  transition-duration: 0.1s;
-}
-
-a:hover {
-  color: #07030b;
-}
-
-h4 {
-  padding: 0.2rem 1rem;
 }
 
 ul {
@@ -53,28 +33,16 @@ ul {
   padding: 0.2rem;
 }
 
-figure {
-  margin: 1rem 0;
-  width: 100%;
-}
-
-code, pre {
-  padding: 2rem;
-  margin: 0 0 0.8rem -1rem;
-  background-color: transparent;
-  border: 1px dotted #a7031f;
-  border-left: none;
-  font-size: 1.4rem;
-  display: block;
-  white-space: normal;
-  position: relative;
-}
-
 .pointer {
   cursor: pointer;
 }
 
-/************* SEXY FLEXY STYLES **************/
+p, pre, pre p, blockquote, blockquote p {
+  white-space: pre-wrap;
+  max-width: 100%;
+}
+
+/************* #CONTENT WRAPS ALL VISIBLE ELEMENTS **************/
 #content {
   display: flex;
   flex-direction: column;
@@ -89,38 +57,58 @@ code, pre {
   }
 }
 
+/************* #MASTHEAD CONTAINS TOP MENU AND SITE TITLE **************/
 #masthead {
   background-color: #a7031f;
-  flex: 5 0 auto;
+  flex: 4 0 98vw;
   order: 1;
+  padding: 0.1rem 0.6rem;
 }
 
 #masthead h1 {
   color: #faf7f2;
 }
 
-@media (min-width: 769px) {
+@media (min-width: 1025px) {
   #masthead {
-    flex: 1;
     min-width: 10rem;
   }
   #masthead h1 {
-    transform: rotate(90deg);
-    transform-origin: bottom left;
     font-size: 6rem;
-    position: absolute;
     padding-bottom: 0;
-    margin-left: -2rem;
+    margin-left: -0.88rem;
+    margin-top: -2.01rem;
   }
 }
 
-/*************** MAIN CONTENT ******************/
+/*************** #MAIN CONTAINS THE CURRENTLY DISPLAYED POST/PAGE *************/
 #main {
   background-color: #faf7f2;
   order: 2;
-  flex: 4 1 auto;
   flex-wrap: wrap;
   padding-bottom: 3rem;
+}
+
+#main .mainImage {
+  width: 320px;
+}
+
+@media (min-width: 321px) {
+  #main .mainImage {
+    float: right;
+  }
+}
+
+@media (min-width: 769px) {
+  #main .mainImage {
+    max-width: 50%;
+    min-width: 40%;
+  }
+}
+
+#main .mainContent {
+  font-size: 1rem;
+  margin-top: -1rem;
 }
 
 @media (min-width: 769px) {
@@ -128,203 +116,272 @@ code, pre {
     flex: 3 0 70vw;
     min-height: 79vh;
   }
+}
+
+#main.expanded {
+  flex: 4 1 auto;
+}
+
+#main.collapsed {
+  display: none;
+}
+
+#main.collapsed blockquote, #main.collapsed ul, #main.collapsed ol, #main.collapsed pre, #main.collapsed code {
+  display: none;
+}
+
+@media (min-width: 769px) {
   #main.collapsed {
+    display: flex;
     flex: 0 0 10rem;
-  }
-  #main.collapsed .mainTitle {
-    max-width: 100%;
-  }
-  #main.collapsed .mainImage {
-    max-width: 100%;
   }
   #main.collapsed .mainContent {
     max-height: 23vh;
     overflow: hidden;
     font-size: 0.8rem;
   }
-  #main.collapsed .mainContent * {
-    display: none;
-  }
-  #main.collapsed .mainContent p {
-    display: block;
-  }
-  #main.expanded {
-    flex: 4 1 auto;
-  }
 }
 
-/*************** FEATURED CONTENT ******************/
-.mainTitle {
-  max-width: 40%;
-}
-
-@media (min-width: 769px) {
-  .mainImage {
-    max-width: 50%;
-    min-width: 40%;
-    float: right;
-  }
-}
-
-.mainContent {
-  color: #a7031f;
-  font-size: 1.4rem;
-  margin-top: 1rem;
-}
-
-.mainContent p {
-  padding-left: 1rem;
-}
-
-.mainContent p, .mainContent pre, .mainContent code, .mainContent h1, .mainContent h2 {
-  max-width: 60rem;
-}
-
-@media (min-width: 1025px) {
-  .mainContent ul {
-    float: right;
-    width: 30%;
-  }
-  .mainContent li h3:before, .mainContent li h4:before, .mainContent li > p:before {
-    content: "\262D";
-    color: #a7031f;
-    padding-right: 0.6rem;
-    font-size: 2rem;
-  }
-}
-
+/******************** SIDEBARS **********************/
 #primary, #secondary {
   background-color: #faf7f2;
   display: flex;
-  flex: 0 0 auto;
-  margin: 0;
-  padding-top: 0;
+  flex-direction: column;
+  order: 4;
 }
 
-@media (min-width: 769px) {
+@media (min-width: 1025px) {
   #primary, #secondary {
-    position: relative;
-    padding-left: 0;
-    min-height: 14vh;
+    flex-basis: 2;
+    max-width: 50%;
   }
-  #primary h3, #secondary h3 {
-    background-color: #a7031f;
-    color: #faf7f2;
-    transform: rotate(90deg);
-    transform-origin: top left;
-    width: 160px;
-    position: absolute;
-    margin: 0 3rem;
-    height: 3rem;
-    text-align: center;
-  }
+}
+
+#primary h3, #secondary h3 {
+  background-color: #a7031f;
+  color: #faf7f2;
+  height: 3rem;
+  text-align: center;
+  padding-top: 0.6rem;
+  margin: -3px;
+}
+
+#primary li, #secondary li {
+  display: flex;
+  flex-basis: 1;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+@media (min-width: 321px) {
   #primary li, #secondary li {
-    flex: 1 1 23%;
-    min-width: 120px;
-    margin-left: 3rem;
+    flex-basis: 2;
     padding-bottom: 2rem;
-    cursor: pointer;
-    display: block;
   }
-  #primary li a, #secondary li a {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: row;
-  }
-  #primary li img, #secondary li img {
-    height: 160px;
-    width: 320px;
-  }
+}
+
+#primary li h4, #secondary li h4 {
+  order: 1;
+  font-size: 1.2rem;
+}
+
+@media (min-width: 321px) {
   #primary li h4, #secondary li h4 {
     font-size: 1.6rem;
+    flex: 1 1 50%;
+    order: 2;
   }
 }
 
-#primary {
+#primary li h4, #primary li p, #secondary li h4, #secondary li p {
+  margin: 0.4rem;
+}
+
+#primary li .excerpt, #secondary li .excerpt {
   order: 3;
-  background-color: #5f6b85;
-  color: #faf7f2;
 }
 
-@media (min-width: 769px) {
-  #primary {
-    flex: 1 1 8rem;
-    flex-direction: column;
-    min-width: 320px;
+@media (min-width: 321px) {
+  #primary li .excerpt, #secondary li .excerpt {
+    flex: 1 1 50%;
+  }
+}
+
+@media (min-width: 321px) {
+  #primary li.hasimage, #secondary li.hasimage {
+    display: block;
     max-width: 320px;
   }
-  #primary h3 {
-    transform: none;
-    position: static;
-    width: 320px;
+  #primary li.hasimage img, #secondary li.hasimage img {
+    float: left;
+  }
+  #primary li.hasimage h4, #secondary li.hasimage h4 {
+    display: flex;
     margin: 0;
+    padding: 0 0.4rem;
   }
-  #primary li {
-    flex-grow: 0;
-    max-width: 320px;
-    padding-left: 0px;
-    margin-left: 0;
-    clear: left;
+  #primary li.hasimage .excerpt, #secondary li.hasimage .excerpt {
+    display: flex;
+    order: 3;
   }
-  #primary li a {
-    flex-direction: column;
+}
+
+#primary li.hasimage, #secondary li.hasimage {
+  display: flex;
+  min-width: 100%;
+}
+
+#primary li.hasimage h4, #secondary li.hasimage h4 {
+  order: 1;
+  text-shadow: 2px 2px #faf7f2;
+  position: absolute;
+}
+
+#primary li.hasimage img, #secondary li.hasimage img {
+  order: 2;
+  max-width: 320px;
+  margin-left: auto;
+}
+
+#primary li.hasimage .excerpt, #secondary li.hasimage .excerpt {
+  order: 3;
+}
+
+#primary li.hasimage .excerpt p, #secondary li.hasimage .excerpt p {
+  padding-left: 0.4rem;
+  margin-bottom: 0;
+  max-width: 320px;
+  margin-left: auto;
+}
+
+/************** TWEAKS FOR LARGE SCREENS ********************/
+@media (min-width: 1200px) {
+  #content {
+    align-items: stretch;
+    margin-bottom: 3rem;
   }
-  #primary li img {
-    width: 320px;
+  #main {
+    padding-left: 1rem;
+    padding-bottom: 8rem;
+    width: 70vw;
   }
-  #primary li h4, #primary li p {
-    width: 320px -10%;
+  #main .mainTitle {
+    padding-top: 3rem;
+    font-size: 3rem;
+    max-width: 50%;
+  }
+  #main .mainContent {
+    padding-top: 3rem;
+    max-width: 100%;
+    font-size: 1.2rem;
+  }
+  #main .mainImage {
+    margin-left: 3rem;
+  }
+  #main.expanded {
+    flex: 2 1 auto;
+  }
+  #primary, #secondary {
+    max-width: 25vw;
+    margin-top: 0;
+  }
+  #primary {
+    flex-grow: 1;
   }
   #primary li:nth-last-child(2) {
     margin-top: auto;
   }
-  #primary.expanded {
-    order: 1;
-    flex: 4 1 33%;
+  #primary .expandButton {
+    width: 320px;
+    align-self: flex-end;
+  }
+  #secondary {
     flex-direction: row;
+    min-width: 98vw;
     flex-wrap: wrap;
-    max-width: 80vw;
+    position: relative;
     justify-content: space-between;
   }
-  #primary.expanded h3.title {
-    width: 100vw;
-  }
-  #primary.expanded li:nth-last-child(2) {
-    margin-top: 0;
-  }
-}
-
-#secondary {
-  order: 4;
-  background-color: cornsilk;
-}
-
-@media (min-width: 769px) {
-  #secondary {
-    min-height: 16vh;
-    width: 98vw;
-    flex-wrap: wrap;
-  }
-  #secondary.expanded {
-    flex: 4 1 60vw;
-    align-content: flex-start;
-  }
   #secondary li {
-    flex: 1 1 24%;
-    padding: 1rem;
+    flex: 1 0 320px;
+    max-width: 320px;
   }
-  #secondary h4, #secondary .excerpt {
-    padding-left: 0;
+  #secondary li.hasimage {
+    max-width: 320px;
+    min-width: 320px;
+  }
+  #secondary h3.title {
+    margin-top: -5.4rem;
     width: 320px;
   }
-  #secondary li:last-child {
-    margin: 0;
-    max-width: 5rem;
-    position: absolute;
-    right: 0;
+  #secondary h3.expandButton {
+    margin-top: 3rem;
+    width: 320px;
   }
-  #secondary li:last-child .expandButton {
-    margin-left: 0;
+}
+
+/************** TWEAKS FOR REALLY LARGE SCREENS ********************/
+@media (min-width: 1560px) {
+  #content {
+    align-items: stretch;
+    margin-bottom: 3rem;
+  }
+  #main {
+    padding-left: 1rem;
+    padding-bottom: 8rem;
+    min-width: 60vw;
+  }
+  #main .mainTitle {
+    padding-top: 3rem;
+    font-size: 3rem;
+  }
+  #main .mainContent {
+    padding-top: 3rem;
+    max-width: 70rem;
+    font-size: 1.2rem;
+  }
+  #main .mainImage {
+    margin-left: 3rem;
+  }
+  #primary, #secondary {
+    max-width: 25vw;
+    margin-top: 0;
+  }
+  #primary {
+    flex-grow: 1;
+  }
+  #primary li:nth-last-child(2) {
+    margin-top: auto;
+  }
+  #primary .expandButton {
+    width: 320px;
+    align-self: flex-end;
+  }
+  #secondary {
+    flex-direction: row;
+    min-width: 98vw;
+    flex-wrap: wrap;
+    position: relative;
+    justify-content: space-between;
+  }
+  #secondary li {
+    flex: 1 0 320px;
+    max-width: 320px;
+  }
+  #secondary li.hasimage {
+    max-width: 320px;
+    min-width: 320px;
+  }
+  #secondary h3.title {
+    position: absolute;
+    margin-top: -5.4rem;
+    width: 320px;
+  }
+  #secondary h3.expandButton {
+    position: absolute;
+    bottom: -3rem;
+    right: 0;
+    width: 320px;
   }
 }
 
@@ -340,83 +397,3 @@ h3.expandButton:after {
 .expanded h3.expandButton:after {
   content: 'Show less';
 }
-
-/********* REALLY SPECIFIC TWEAKS ***************/
-/*********** ENHANCED BLOCKQUOTE ***************/
-@media (min-width: 321px) {
-  blockquote {
-    width: 320px;
-    clear: left;
-    float: left;
-    margin: 0 1rem 0 0;
-    text-align: center;
-    background-color: #a7031f;
-  }
-  blockquote p {
-    color: #faf7f2;
-    font-size: 1.6rem;
-    line-height: 1.6rem;
-    padding: 1rem;
-  }
-}
-
-@media (min-width: 321px) {
-  pre blockquote {
-    color: #faf7f2;
-    font-family: "Maven Pro", sans-serif;
-    font-size: 1.4rem;
-    margin: 1rem 1.4rem 1rem -1rem;
-    padding: 1rem;
-  }
-}
-
-ul > h3 {
-  text-transform: capitalize;
-}
-
-.reactionary-copy-button {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  border: 1px dotted #a7031f;
-  border-bottom: none;
-  border-right: none;
-  background-color: ghostwhite;
-  transition-duration: 0.2s;
-}
-
-.reactionary-copy-button:hover {
-  background-color: #a7031f;
-}
-
-.reactionary-copy-button:hover h5 {
-  transition-duration: 0.2s;
-  color: #faf7f2;
-}
-
-.reactionary-tweet-link {
-  text-align: right;
-}
-
-.reactionary-tweet-link h5 {
-  color: #faf7f2;
-  border-radius: 0.5rem;
-  margin: 0.5rem;
-  width: 40%;
-  border: 1px solid #a7031f;
-  margin-left: auto;
-}
-
-.reactionary-tweet-link h5:before {
-  content: "\25B3";
-  margin: 0 1rem 0 0.4rem;
-  font-size: 1rem;
-}
-
-.reactionary-tweet-link h5:hover {
-  color: white;
-  border: 1px solid #faf7f2;
-  background-color: #890219;
-}
-
-/************** UTILITIES ***********************/
